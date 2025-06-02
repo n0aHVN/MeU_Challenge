@@ -9,8 +9,8 @@ CREATE TABLE racket (
     composition VARCHAR(255),
     racket_size VARCHAR(20),
     thickness VARCHAR(20),
-    price INT CHECK (price >= 0),
-    status VARCHAR(50) CHECK (status IN ('disable', 'enable')),
+    price INT CHECK (price >= 0) NOT NULL,
+    status VARCHAR(50) CHECK (status IN ('disable', 'enable')) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -40,3 +40,8 @@ VALUES
 ('Butterfly', 'Fan Zhendong ALC', 'This is the description', 11.8, 10.3, NULL, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 3000000,'enable'),
 ('Butterfly', 'Zhang Jike ALC NDN', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 9000000,'enable'),
 ('Butterfly', 'Timo Boll ALC', 'This is the description', 11.8, 10.3, 85, '5 Wood Layers + 2 Carbon Layers', '157x150mm', '5.8mm', 3000000,'disable');
+
+CREATE USER tt_admin WITH PASSWORD '123';
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ttadmin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ttadmin;
