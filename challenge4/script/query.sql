@@ -19,7 +19,25 @@ CREATE TABLE racket (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "user" (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
+CREATE TABLE token (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
+    refresh_token TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP
+);
+
+------------------------- TRIGGER ------------------------- 
+-- racket
 CREATE OR REPLACE FUNCTION set_update_at_column()
 RETURNS TRIGGER AS 
 $$
@@ -36,6 +54,15 @@ BEFORE UPDATE ON racket
 FOR EACH ROW
 EXECUTE FUNCTION set_update_at_column();
 
+-- user
+CREATE OR REPLACE TRIGGER set_update_trigger 
+BEFORE UPDATE ON user
+FOR EACH ROW
+EXECUTE FUNCTION set_update_at_column();
+
+
+-----------------------INSERT-----------------------
+
 INSERT INTO racket (brand, racket_name, slug, description, speed_rating, vibration_rating, weight, composition, racket_size, thickness, price, quantity,status)
 VALUES
 ('Butterfly', 'Zhang Jike ALC', 'zhang-jike-alc', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 8000000, 'enable'),
@@ -44,6 +71,13 @@ VALUES
 ('Butterfly', 'Fan Zhendong ALC', 'fan-zhendong-alc', 'This is the description', 11.8, 10.3, NULL, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 3000000, 'enable'),
 ('Butterfly', 'Zhang Jike ALC NDN', 'zhang-jike-alc-ndn', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 9000000, 'enable'),
 ('Butterfly', 'Timo Boll ALC', 'timo-boll-alc', 'This is the description', 11.8, 10.3, 85, '5 Wood Layers + 2 Carbon Layers', '157x150mm', '5.8mm', 100, 3000000, 'disable');
+
+INSERT INTO "user" (username, email, password)
+VALUES 
+  ('alice', '123@gmail.com', '123'),
+  ('bob', 'bob@gmail.com', '123'),
+  ('charlie', 'charlie@gmail.com', '123');
+
 
 CREATE USER tt_admin WITH PASSWORD '123';
 
