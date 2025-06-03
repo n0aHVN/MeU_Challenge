@@ -1,0 +1,19 @@
+services:
+  db:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  app:
+    build:
+      context: challenge3
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+volumes:
+  pgdata:
