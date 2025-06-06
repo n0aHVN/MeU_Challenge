@@ -54,7 +54,8 @@ export class RacketController{
 
     static async putRacketByID(id: string, {
         brand, 
-        racket_name, 
+        racket_name,
+        slug,
         description, 
         speed_rating, 
         vibration_rating, 
@@ -78,7 +79,8 @@ export class RacketController{
                     thickness = $9,
                     price = $10,
                     status = $11
-                WHERE id = $12
+                    slug = $12
+                WHERE id = $13
                 RETURNING *;`;
         const values = [
             brand, 
@@ -92,6 +94,7 @@ export class RacketController{
             thickness, 
             price, 
             status,
+            slug,
             id
         ]
         const result = await pgClient.query(query, values);
