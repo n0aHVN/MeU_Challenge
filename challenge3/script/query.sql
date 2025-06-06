@@ -13,7 +13,7 @@ CREATE TABLE racket (
     racket_size VARCHAR(20),
     thickness VARCHAR(20),
     price INT CHECK (price >= 0) NOT NULL,
-    quantity INT CHECK (price >= 0) NOT NULL,
+    quantity INT CHECK (quantity >= 0) NOT NULL,
     status VARCHAR(50) CHECK (status IN ('disable', 'enable')) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

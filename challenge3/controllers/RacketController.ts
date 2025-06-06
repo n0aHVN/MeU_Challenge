@@ -54,7 +54,8 @@ export class RacketController{
 
     static async putRacketByID(id: string, {
         brand, 
-        racket_name, 
+        racket_name,
+        slug,
         description, 
         speed_rating, 
         vibration_rating, 
@@ -62,7 +63,8 @@ export class RacketController{
         composition, 
         racket_size, 
         thickness, 
-        price, 
+        price,
+        quantity,
         status
     }: IRacketModel){
         const pgClient = await getPgClient();
@@ -78,7 +80,9 @@ export class RacketController{
                     thickness = $9,
                     price = $10,
                     status = $11
-                WHERE id = $12
+                    slug = $12
+                    quantity = $13
+                WHERE id = $14
                 RETURNING *;`;
         const values = [
             brand, 
@@ -90,8 +94,10 @@ export class RacketController{
             composition, 
             racket_size, 
             thickness, 
-            price, 
+            price,
             status,
+            slug,
+            quantity,
             id
         ]
         const result = await pgClient.query(query, values);
