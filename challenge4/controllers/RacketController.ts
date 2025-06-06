@@ -54,46 +54,55 @@ export class RacketController{
 
     static async putRacketByID(id: string, {
         brand, 
-        racket_name, 
+        racket_name,
+        slug,
         description, 
         speed_rating, 
         vibration_rating, 
         weight, 
         composition, 
         racket_size, 
-        thickness, 
+        thickness,
         price, 
+        quantity,
         status
     }: IRacketModel){
         const pgClient = await getPgClient();
-        const query = `UPDATE racket
-                SET brand = $1,
-                    racket_name = $2,
-                    description = $3,
-                    speed_rating = $4,
-                    vibration_rating = $5,
-                    weight = $6,
-                    composition = $7,
-                    racket_size = $8,
-                    thickness = $9,
-                    price = $10,
-                    status = $11
-                WHERE id = $12
-                RETURNING *;`;
+        const query = `
+            UPDATE racket
+            SET brand = $1,
+                racket_name = $2,
+                slug = $3,
+                description = $4,
+                speed_rating = $5,
+                vibration_rating = $6,
+                weight = $7,
+                composition = $8,
+                racket_size = $9,
+                thickness = $10,
+                price = $11,
+                quantity = $12,
+                status = $13
+            WHERE id = $14
+            RETURNING *;
+        `;
+
         const values = [
-            brand, 
-            racket_name, 
-            description, 
-            speed_rating, 
-            vibration_rating, 
-            weight, 
-            composition, 
-            racket_size, 
-            thickness, 
-            price, 
+            brand,
+            racket_name,
+            slug,
+            description,
+            speed_rating,
+            vibration_rating,
+            weight,
+            composition,
+            racket_size,
+            thickness,
+            price,
+            quantity,
             status,
             id
-        ]
+        ];
         const result = await pgClient.query(query, values);
         if (result.rowCount && result.rowCount > 0){
             return true;
