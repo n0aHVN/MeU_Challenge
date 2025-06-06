@@ -63,7 +63,8 @@ export class RacketController{
         composition, 
         racket_size, 
         thickness, 
-        price, 
+        price,
+        quantity,
         status
     }: IRacketModel){
         const pgClient = await getPgClient();
@@ -80,7 +81,8 @@ export class RacketController{
                     price = $10,
                     status = $11
                     slug = $12
-                WHERE id = $13
+                    quantity = $13
+                WHERE id = $14
                 RETURNING *;`;
         const values = [
             brand, 
@@ -92,9 +94,10 @@ export class RacketController{
             composition, 
             racket_size, 
             thickness, 
-            price, 
+            price,
             status,
             slug,
+            quantity,
             id
         ]
         const result = await pgClient.query(query, values);
