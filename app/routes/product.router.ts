@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { getPgClient } from "../db/pgClient";
-import { RacketController } from "../controllers/RacketController";
+import { RacketController } from "../controllers/racket.controller";
 import { IRacketModel } from "../models/racket.model";
 
 import {body, param, query} from 'express-validator';

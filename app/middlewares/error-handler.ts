@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../errors/custom-error";
+import { CustomError } from "../errors/custom.error";
 
 export const ErrorHandlerMiddleware = async (err: Error, req: Request, res: Response, next: NextFunction)=>{
     console.log(err);

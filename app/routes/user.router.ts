@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { body, param } from "express-validator";
 import { RequestValidatorMiddleware } from "../middlewares/request-validator";
-import { UserController } from "../controllers/UserController";
+import { UserController } from "../controllers/user.controller";
 import jwt from 'jsonwebtoken';
 import cookieSession from "cookie-session";
 import { CheckAuthMiddleware } from "../middlewares/check-auth";
