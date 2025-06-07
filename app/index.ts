@@ -4,8 +4,24 @@ dotenv.config();
 
 
 const start = async () =>{
-    if(!process.env?.EMAIL_USER || !process.env?.EMAIL_PASS){
-        throw new Error("EMAIL_USER or EMAIL_PASSWORD is missing!");
+
+    const requiredEnvVars = [
+        'PORT',
+        'PGHOST',
+        'PGUSER',
+        'PGPASSWORD',
+        'PGDATABASE',
+        'PGPORT',
+        'JWT_SECRET',
+        'JWT_EXPIRES_IN',
+        'EMAIL_USER',
+        'EMAIL_PASS'
+    ];
+
+    for (const varName of requiredEnvVars) {
+        if (!process.env[varName]) {
+            throw new Error(`Environment variable ${varName} is missing!`);
+        }
     }
 }
 
