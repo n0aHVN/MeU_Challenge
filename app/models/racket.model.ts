@@ -1,7 +1,7 @@
 import { QueryResultRow } from "pg";
 
 export interface IRacketModel {
-  id: string;
+  id?: string;
   brand: string;
   description: string;
   racket_name: string;
@@ -15,7 +15,7 @@ export interface IRacketModel {
   price: number;
   quantity: number;
   status: 'enable' | 'disable';
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 

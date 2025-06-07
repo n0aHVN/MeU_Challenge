@@ -24,20 +24,17 @@ CREATE TABLE "user" (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    status VARCHAR(10) CHECK (status IN ('disable', 'verified','unverified')) DEFAULT 'unverified' NOT NULL,
+    status VARCHAR(10) CHECK (status IN ('disable', 'enable')) DEFAULT 'enable' NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "otp" (
     username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     otp VARCHAR(6) NOT NULL,
-    expired_at TIMESTAMP NOT NULL,
-
-    CONSTRAINT fk_otp_user 
-        FOREIGN KEY (username) 
-        REFERENCES "user"(username)
-        ON DELETE CASCADE
+    expired_at TIMESTAMP NOT NULL
 );
 
 -- CREATE TABLE token (
@@ -84,11 +81,11 @@ VALUES
 ('Butterfly', 'Zhang Jike ALC NDN', 'zhang-jike-alc-ndn', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 9000000, 'enable'),
 ('Butterfly', 'Timo Boll ALC', 'timo-boll-alc', 'This is the description', 11.8, 10.3, 85, '5 Wood Layers + 2 Carbon Layers', '157x150mm', '5.8mm', 100, 3000000, 'disable');
 
-INSERT INTO "user" (username, email, password, status)
+INSERT INTO "user" (username, email, password)
 VALUES 
-  ('alice', '123@gmail.com', '123', 'verified'),
-  ('bob', 'bob@gmail.com', '123', 'verified'),
-  ('charlie', 'charlie@gmail.com', '123', 'verified');
+  ('alice', '123@gmail.com', '123'),
+  ('bob', 'bob@gmail.com', '123'),
+  ('charlie', 'charlie@gmail.com', '123');
 
 
 CREATE USER tt_admin WITH PASSWORD '123';

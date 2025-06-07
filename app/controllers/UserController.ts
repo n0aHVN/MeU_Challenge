@@ -11,6 +11,18 @@ export class UserController{
         return result.rows[0];
     }
 
+    static async ifUsernameExist(username: string){
+        const pgClient = await getPgClient();
+        const query = `SELECT * FROM "user" 
+                    WHERE username = $1`;
+        const values = [username];
+        const result = await pgClient.query(query, values);
+        if (result.rowCount == 0 ){
+            return false;
+        }
+        return true;
+    }
+
     static async createUser({
         username,
         email,
@@ -21,6 +33,18 @@ export class UserController{
             VALUES ($1, $2, $3)`;
         const values = [username, email, password];
         const result = await pgClient.query(query, values);
+        if (result.rowCount!= 0){
+            return true;
+        }
+        else return false;
+    }
+
+    static async updateStatusVerifiedUser(username: string) : Promise<boolean>{
+        const pgClient = await getPgClient();
+        const query = `UPDATE "user" 
+            SET status = "verified" 
+            WHERE username = $1`;
+        const result = await pgClient.query(query,[username]);
         if (result.rowCount!= 0){
             return true;
         }

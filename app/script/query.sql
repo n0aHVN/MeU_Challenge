@@ -28,13 +28,13 @@ CREATE TABLE "user" (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE token (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
-    refresh_token TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP
-);
+-- CREATE TABLE token (
+--     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
+--     refresh_token TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     expires_at TIMESTAMP
+-- );
 
 ------------------------- TRIGGER ------------------------- 
 -- racket

@@ -4,7 +4,9 @@ dotenv.config();
 
 
 const start = async () =>{
-
+    if(!process.env?.EMAIL_USER || !process.env?.EMAIL_PASS){
+        throw new Error("EMAIL_USER or EMAIL_PASSWORD is missing!");
+    }
 }
 
 app.listen(process.env.PORT, ()=>{
