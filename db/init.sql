@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE racket (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     brand VARCHAR(100) NOT NULL,
@@ -18,7 +19,37 @@ CREATE TABLE racket (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "user" (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    status VARCHAR(10) CHECK (status IN ('disable', 'verified','unverified')) DEFAULT 'unverified' NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
+CREATE TABLE "otp" (
+    username VARCHAR(50) NOT NULL UNIQUE,
+    otp VARCHAR(6) NOT NULL,
+    expired_at TIMESTAMP NOT NULL,
+
+    CONSTRAINT fk_otp_user 
+        FOREIGN KEY (username) 
+        REFERENCES "user"(username)
+        ON DELETE CASCADE
+);
+
+-- CREATE TABLE token (
+--     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     user_id UUID REFERENCES "user"(id) ON DELETE CASCADE,
+--     refresh_token TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     expires_at TIMESTAMP
+-- );
+
+------------------------- TRIGGER ------------------------- 
+-- racket
 CREATE OR REPLACE FUNCTION set_update_at_column()
 RETURNS TRIGGER AS 
 $$
@@ -30,10 +61,19 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE TRIGGER set_update_trigger 
+CREATE OR REPLACE TRIGGER set_update_trigger_racket
 BEFORE UPDATE ON racket
 FOR EACH ROW
 EXECUTE FUNCTION set_update_at_column();
+
+-- user
+CREATE OR REPLACE TRIGGER set_update_trigger_user
+BEFORE UPDATE ON "user"
+FOR EACH ROW
+EXECUTE FUNCTION set_update_at_column();
+
+
+-----------------------INSERT-----------------------
 
 INSERT INTO racket (brand, racket_name, slug, description, speed_rating, vibration_rating, weight, composition, racket_size, thickness, price, quantity,status)
 VALUES
@@ -43,6 +83,13 @@ VALUES
 ('Butterfly', 'Fan Zhendong ALC', 'fan-zhendong-alc', 'This is the description', 11.8, 10.3, NULL, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 3000000, 'enable'),
 ('Butterfly', 'Zhang Jike ALC NDN', 'zhang-jike-alc-ndn', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 9000000, 'enable'),
 ('Butterfly', 'Timo Boll ALC', 'timo-boll-alc', 'This is the description', 11.8, 10.3, 85, '5 Wood Layers + 2 Carbon Layers', '157x150mm', '5.8mm', 100, 3000000, 'disable');
+
+INSERT INTO "user" (username, email, password, status)
+VALUES 
+  ('alice', '123@gmail.com', '123', 'verified'),
+  ('bob', 'bob@gmail.com', '123', 'verified'),
+  ('charlie', 'charlie@gmail.com', '123', 'verified');
+
 
 CREATE USER tt_admin WITH PASSWORD '123';
 
