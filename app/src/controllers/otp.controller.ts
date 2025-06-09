@@ -3,11 +3,14 @@ import { IOtpModel } from "../models/otp.model";
 import { EmailService } from "../services/email.service";
 
 export class OtpController {
-    static async getOtp(username: string): Promise<IOtpModel> {
+    static async getOtp(
+        {username, otp}:IOtpModel
+    ): Promise<IOtpModel> {
         const pgClient = await getPgClient();
         const query = `SELECT * FROM otp 
-            WHERE username = $1`;
-        const data = await pgClient.query(query, [username]);
+            WHERE username = $1 AND otp = $2`;
+        const values = [username, otp];
+        const data = await pgClient.query(query, values);
         return data.rows[0];
     }
     static async ifUsernameExist(username:string): Promise<boolean>{

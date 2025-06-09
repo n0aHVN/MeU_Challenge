@@ -82,13 +82,10 @@ userRouter.post("/api/user/verify/:username",
     async (req: Request, res: Response) => {
         const { username } = req.params;
         const otpCode  = req.body.otp;
-        const user = await OtpController.getOtp(username);
+        const user = await OtpController.getOtp({username, otp: otpCode});
         const currentTime = new Date(Date.now());
         if (!user) {
-            throw new Error("Username is not exist");
-        }
-        else if (otpCode != user.otp) {
-            throw new Error("OTP is not correct");
+            throw new Error("Username or OTP is not correct");
         }
         else if (currentTime > user.expiredAt!) {
             throw new Error("OTP is expired");
