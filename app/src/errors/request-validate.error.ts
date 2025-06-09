@@ -1,4 +1,4 @@
-import { ValidationError } from "express-validator";
+import { ValidationError } from "class-validator";
 import { CustomError } from "./custom.error";
 
 export class RequestValidateError extends CustomError{
@@ -8,10 +8,12 @@ export class RequestValidateError extends CustomError{
         Object.setPrototypeOf(this, RequestValidateError.prototype);
     }
     serializeErrors() {
-        return this.errors.map((err)=>{
-            if (err.type == "field")
-                return {message: err.msg, field: err.path};
-            else return {message: err.msg};
-        });
+        const message = this.errors.map((err)=>{
+            return {
+                property: err.property, 
+                message: Object.values(err.constraints!)[0] || "Unknown validation error!"
+            }
+        })
+        return message;
     }
 }

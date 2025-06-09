@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import { body, param } from "express-validator";
 import { RequestValidatorMiddleware } from "../middlewares/request-validator";
 import { UserController } from "../controllers/user.controller";
 import jwt from 'jsonwebtoken';
@@ -7,18 +6,15 @@ import cookieSession from "cookie-session";
 import { CheckAuthMiddleware } from "../middlewares/check-auth";
 import { EmailService } from "../services/email.service";
 import { OtpController } from "../controllers/otp.controller";
+import { plainToInstance } from "class-transformer";
+import { SignInBodyDto, SignUpBodyDto, VerifyOtpBodyDto } from "../dto/user.dto";
+import { validate } from "class-validator";
 const userRouter = Router();
 
 userRouter.post("/api/user/signin",
-    [
-        body("username")
-            .notEmpty()
-            .withMessage("Username is required"),
-        body("password")
-            .notEmpty()
-            .withMessage("Password is required")
-    ],
-    RequestValidatorMiddleware,
+    RequestValidatorMiddleware({
+        bodyDto: SignInBodyDto
+    }),
     async (req: Request, res: Response) => {
         const { username, password } = req.body;
         const user = await UserController.findUser(username, password);
@@ -38,20 +34,9 @@ userRouter.post("/api/user/signin",
     });
 
 userRouter.post("/api/user/signup",
-    [
-        body("username")
-            .notEmpty()
-            .withMessage("Username is required"),
-        body("email")
-            .notEmpty()
-            .withMessage("Email is required")
-            .isEmail()
-            .withMessage("Email is invalid"),
-        body("password")
-            .notEmpty()
-            .withMessage("Password is required")
-    ],
-    RequestValidatorMiddleware,
+    RequestValidatorMiddleware({
+        bodyDto: SignUpBodyDto
+    }),
     async (req: Request, res: Response) => {
         //Check if username exist
         const { username, email, password } = req.body;
@@ -91,15 +76,9 @@ userRouter.get("/api/user/signout", (req: Request, res: Response) => {
 });
 
 userRouter.post("/api/user/verify/:username",
-    [
-        param("username")
-            .notEmpty()
-            .withMessage("Missing user id"),
-        body("otp")
-            .notEmpty()
-            .withMessage("Missing OTP"),
-    ],
-    RequestValidatorMiddleware,
+    RequestValidatorMiddleware({
+        bodyDto: VerifyOtpBodyDto
+    }),
     async (req: Request, res: Response) => {
         const { username } = req.params;
         const otpCode  = req.body.otp;
