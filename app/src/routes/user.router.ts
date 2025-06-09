@@ -2,13 +2,10 @@ import { Request, Response, Router } from "express";
 import { RequestValidatorMiddleware } from "../middlewares/request-validator";
 import { UserController } from "../controllers/user.controller";
 import jwt from 'jsonwebtoken';
-import cookieSession from "cookie-session";
 import { CheckAuthMiddleware } from "../middlewares/check-auth";
 import { EmailService } from "../services/email.service";
 import { OtpController } from "../controllers/otp.controller";
-import { plainToInstance } from "class-transformer";
 import { SignInBodyDto, SignUpBodyDto, VerifyOtpBodyDto } from "../dto/user.dto";
-import { validate } from "class-validator";
 const userRouter = Router();
 
 userRouter.post("/api/user/signin",
