@@ -72,7 +72,7 @@ EXECUTE FUNCTION set_update_at_column();
 
 -----------------------INSERT-----------------------
 
-INSERT INTO racket (brand, racket_name, slug, description, speed_rating, vibration_rating, weight, composition, racket_size, thickness, price, quantity,status)
+INSERT INTO racket (brand, racket_name, slug, description, speed_rating, vibration_rating, weight, composition, racket_size, thickness, quantity, price,status)
 VALUES
 ('Butterfly', 'Zhang Jike ALC', 'zhang-jike-alc', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 8000000, 'enable'),
 ('Butterfly', 'Viscaria ALC', 'viscaria-alc', 'This is the description', 11.8, 10.3, 82, '5 Wood Layers + 2 Arylate Carbon Layers', '157x150mm', '5.8mm', 100, 3200000, 'enable'),
