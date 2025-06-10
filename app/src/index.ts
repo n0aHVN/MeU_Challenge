@@ -1,5 +1,7 @@
 import {app} from './app';
 import dotenv from 'dotenv';
+import { initiateSwagger } from './swagger/swagger';
+
 dotenv.config();
 
 
@@ -23,6 +25,8 @@ const start = async () =>{
             throw new Error(`Environment variable ${varName} is missing!`);
         }
     }
+    initiateSwagger(app);
+
 }
 
 app.listen(process.env.PORT, ()=>{

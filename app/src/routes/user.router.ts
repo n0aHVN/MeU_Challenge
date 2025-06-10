@@ -8,6 +8,34 @@ import { OtpController } from "../controllers/otp.controller";
 import { SignInBodyDto, SignUpBodyDto, VerifyOtpBodyDto } from "../dto/user.dto";
 const userRouter = Router();
 
+/**
+ * @openapi
+ * /api/user/signin:
+ *   post:
+ *     summary: Sign in a user and return a JWT token in session
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       description: User credentials
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignInBodyDto'
+ *     responses:
+ *       200:
+ *         description: Login Successfully
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Login Successfully
+ *       400:
+ *         description: Bad request (validation failed)
+ *       401:
+ *         description: Unauthorized – invalid username or password
+ */
+
 userRouter.post("/api/user/signin",
     RequestValidatorMiddleware({
         bodyDto: SignInBodyDto
@@ -28,8 +56,33 @@ userRouter.post("/api/user/signin",
         req.session = { token: token };
         req.currentUser = jwtData;
         res.status(200).send("Login Successfully");
-    });
-
+    }
+);
+/**
+ * @openapi
+ * /api/user/signup:
+ *   post:
+ *     summary: Sign up a user and save to "otp" db
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       description: User information
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SignUpBodyDto'
+ *     responses:
+ *       200:
+ *         description: Sign Up Successfully
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Login Successfully
+ *       400:
+ *         description: Bad request (Request validation failed)
+ */
 userRouter.post("/api/user/signup",
     RequestValidatorMiddleware({
         bodyDto: SignUpBodyDto
@@ -39,8 +92,7 @@ userRouter.post("/api/user/signup",
         const { username, email, password } = req.body;
         let isExist = await UserController.ifUsernameExist(username);
         if (isExist) {
-            res.status(200).send("User is exist");
-            return;
+            throw new Error("User is exist");
         }
 
         //Check if username exists in OTP
@@ -66,6 +118,23 @@ userRouter.post("/api/user/signup",
         res.status(200).send("Check your email for verification");
         return;
     });
+
+/**
+ * @openapi
+ * /api/user/signout:
+ *   get:
+ *     summary: Sign out a user
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: Signout Successfully
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Login Successfully
+ */
 
 userRouter.get("/api/user/signout", (req: Request, res: Response) => {
     req.session = null;
@@ -105,7 +174,29 @@ userRouter.post("/api/user/verify/:username",
         res.status(200).send("Verify Successfully");
     }
 )
-
+/**
+ * @openapi
+ * /api/user/check:
+ *   get:
+ *     summary: Check if user is authorized
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: User is authorized
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Authorized
+ *       401:
+ *         description: User is not authorized
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Not Authorized
+ */
 userRouter.get("/api/user/check",
     CheckAuthMiddleware,
     (req: Request, res: Response) => {
