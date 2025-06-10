@@ -9,7 +9,7 @@ import { SignInBodyDto, SignUpBodyDto, VerifyOtpBodyDto } from "../dto/user.dto"
 const userRouter = Router();
 
 /**
- * @openapi
+ * @swagger
  * /api/user/signin:
  *   post:
  *     summary: Sign in a user and return a JWT token in session
@@ -59,7 +59,7 @@ userRouter.post("/api/user/signin",
     }
 );
 /**
- * @openapi
+ * @swagger
  * /api/user/signup:
  *   post:
  *     summary: Sign up a user and save to "otp" db
@@ -120,7 +120,7 @@ userRouter.post("/api/user/signup",
     });
 
 /**
- * @openapi
+ * @swagger
  * /api/user/signout:
  *   get:
  *     summary: Sign out a user
@@ -175,7 +175,7 @@ userRouter.post("/api/user/verify/:username",
     }
 )
 /**
- * @openapi
+ * @swagger
  * /api/user/check:
  *   get:
  *     summary: Check if user is authorized
